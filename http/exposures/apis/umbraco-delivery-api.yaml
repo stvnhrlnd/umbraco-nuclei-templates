@@ -38,6 +38,11 @@ http:
     redirects: true
     max-redirects: 3
     matchers:
-      - type: status
-        status:
-          - 200
+      - type: dsl
+        condition: and
+        dsl:
+          # Match will succeed when we receive an HTTP 200 OK response with a
+          # JSON body and a header named `api-supported-versions`.
+          - "status_code == 200"
+          - "contains(content_type, 'application/json')"
+          - "len(api_supported_versions) > 0"
